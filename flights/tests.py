@@ -1,9 +1,8 @@
 from ast import Pass
-from multiprocessing.connection import Client
 from re import A
 from urllib import response
 from django.db.models import Max
-from django.test import TestCase
+from django.test import Client, TestCase
 
 from .models import Airport, Flight, Passenger
 
