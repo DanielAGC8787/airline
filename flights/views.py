@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -25,11 +25,14 @@ def flight(request, flight_id):
 
 def book(request, flight_id):
     if request.method == "POST":
-        #get me a flight with this ID
-        flight = Flight.objects.get(pk=flight_id) # pk is the primary key that i will use to get the passenger
-        #get passenger whose pk is equal to whetever was submitted in this form and whos name is "passemger"
-        passenger = Passenger.objects.get(pk =int(request.POST["passenger"])) #form will be submitted with field passenger
-        #this will add a new row into a table that keeps track of passengers on that flight
+        try:
+            passenger = Passenger.objects.get(pk=int(request.POST["passenger"]))
+            flight = Flight.objects.get(pk=flight_id)
+        except KeyError:
+            return HttpResponseBadRequest("Bad Request: no flight chosen")
+        except Flight.DoesNotExist:
+            return HttpResponseBadRequest("Bad Request: flight does not exist")
+        except Passenger.DoesNotExist:
+            return HttpResponseBadRequest("Bad Request: passenger does not exist")
         passenger.flights.add(flight)
-        return HttpResponseRedirect(reverse("flight", args={flight_id}))
-    return render()
+        return HttpResponseRedirect(reverse("flights:flight", args=(flight_id,)))
