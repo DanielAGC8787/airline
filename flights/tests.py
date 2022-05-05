@@ -57,7 +57,7 @@ class FlightTestCase(TestCase):
         # max_id = Flight.objects.all().aggregate(Max("id"))["id__max"]
         
         c = Client()
-        response = c.get("/flights/5")
+        response = c.get("/flights/10")
         self.assertEqual(response.status_code, 404)
 
     def test_flight_page_passengers(self):
