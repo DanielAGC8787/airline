@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -13,13 +13,14 @@ def index(request):
     })
 
 def flight(request, flight_id):
-    flight = Flight.objects.get(id=flight_id) #get flight that corresponds to id
+    try:
+        flight = Flight.objects.get(id=flight_id)
+    except Flight.DoesNotExist:
+        raise Http404("Flight not found.")
     return render(request, "flights/flight.html", {
-        "flight":flight,
-        "flight_id":flight_id,
+        "flight": flight,
         "passengers": flight.passengers.all(),
-        #return all passengers except the ones that are already on the flight (all of them)
-        "non_passengers": Passenger.objects.exclude(flights = flight).all()
+        "non_passengers": Passenger.objects.exclude(flights=flight).all()
     })
 
 def book(request, flight_id):
