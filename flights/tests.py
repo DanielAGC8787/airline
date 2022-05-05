@@ -1,6 +1,3 @@
-from ast import Pass
-from re import A
-from urllib import response
 from django.db.models import Max
 from django.test import Client, TestCase
 
