@@ -41,6 +41,7 @@ class FlightTestCase(TestCase):
 
     def test_index(self):
         c = Client()
+        #whenever getting a url, its always a good idea to put a slash after the name of the url just for safety
         response = c.get('/flights/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['flights'].count(), 3)
